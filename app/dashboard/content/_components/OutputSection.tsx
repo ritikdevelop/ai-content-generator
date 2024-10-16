@@ -12,10 +12,16 @@ interface props{
 function OutputSection({aiOutput}:props) {
   const editorRef: any = useRef();
 
-  useEffect(()=>{
+  // useEffect(()=>{
+  //   const editorInstance = editorRef.current.getInstance();
+  //   editorInstance.setMarkdown(aiOutput);
+  // },[aiOutput])
+
+  useEffect(() => {
     const editorInstance = editorRef.current.getInstance();
     editorInstance.setMarkdown(aiOutput);
-  },[aiOutput])
+  }, [aiOutput]); // Added aiOutput to the dependency array
+
 
   return (
     <div className="bg-white shadow-lg border rounded-lg">
@@ -28,12 +34,11 @@ function OutputSection({aiOutput}:props) {
       <Editor
         ref={editorRef}
         initialValue="Your result will be show here"
-        initialEditType="wsysiwyg"
+        initialEditType="wysiwyg"
         height="600px"
         useCommandShortcut={true}
         onChange={() =>
-          console.log(editorRef.current.getInstance().getMarkdown())
-        }
+          console.log(editorRef.current.getInstance().getMarkdown())}
       />
     </div>
   );
