@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { chatSession } from "@/utils/AiModal";
+import { AIOutput } from "@/utils/schema";
+import { db } from "@/utils/db";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
 
 interface PROPS {
   params: {
@@ -22,6 +26,7 @@ function CreateNewContent(props: PROPS) {
 
   const [loading, setLoading] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>("");
+  const {user} = useUser();
   const GenerateAIContent = async (formData: any) => {
     setLoading(true);
     // Your logic here to generate AI content based on the formData
@@ -34,8 +39,24 @@ function CreateNewContent(props: PROPS) {
     console.log(result.response.text());
 
     setAiOutput(result?.response.text());
+    await SaveInDB(JSON.stringify (formData),selectedTemplate?.slug, result?.response.text())
     setLoading(false);
   };
+
+  const SaveInDB = async(formData:any, slug:any, aiResp:string)=>{
+    if (!user || !user.primaryEmailAddress || !user.primaryEmailAddress.emailAddress) {
+      console.error("User email address is not defined");
+      return;
+    }
+      const result = await db.insert(AIOutput).values({
+      formData:formData,
+      templateSlug:slug,
+      aiResponse:aiResp,
+      createdBy:user?.primaryEmailAddress?.emailAddress,
+      createdAt:moment().format('DD/MM/yyyy'),
+    });
+    console.log(result);
+  }
 
   return (
     <div className="p-2">
