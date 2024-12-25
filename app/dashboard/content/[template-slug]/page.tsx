@@ -26,43 +26,39 @@ function CreateNewContent(props: PROPS) {
 
   const [loading, setLoading] = useState(false);
   const [aiOutput, setAiOutput] = useState<string>("");
-  const {user} = useUser();
+  const { user } = useUser();
+
   const GenerateAIContent = async (formData: any) => {
     setLoading(true);
-    // Your logic here to generate AI content based on the formData
     const SelectedPrompt = selectedTemplate?.aiPrompt;
-
     const FinalAIPrompt = JSON.stringify(formData) + ", " + SelectedPrompt;
-
     const result = await chatSession.sendMessage(FinalAIPrompt);
 
-    console.log(result.response.text());
-
     setAiOutput(result?.response.text());
-    await SaveInDB(JSON.stringify (formData),selectedTemplate?.slug, result?.response.text())
+    await SaveInDB((formData), selectedTemplate?.slug, result?.response.text());
     setLoading(false);
   };
 
-  const SaveInDB = async(formData:any, slug:any, aiResp:string)=>{
+  const SaveInDB = async (formData: any, slug: any, aiResp: string) => {
     if (!user || !user.primaryEmailAddress || !user.primaryEmailAddress.emailAddress) {
       console.error("User email address is not defined");
       return;
     }
-      const result = await db.insert(AIOutput).values({
-      formData:formData,
-      templateSlug:slug,
-      aiResponse:aiResp,
-      createdBy:user?.primaryEmailAddress?.emailAddress,
-      createdAt:moment().format('DD/MM/yyyy'),
+    const result = await db.insert(AIOutput).values({
+      formData: formData,
+      templateSlug: slug,
+      aiResponse: aiResp,
+      createdBy: user.primaryEmailAddress.emailAddress,
+      createdAt: moment().format('YYYY-MM-DD'),
     });
-    console.log(result);
-  }
+    // console.log(result);
+  };
 
   return (
     <div className="p-2">
       <Link href={"/dashboard"}>
         <Button>
-          <ArrowLeft /> Back
+          <ArrowLeft />
         </Button>
       </Link>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 py-2">

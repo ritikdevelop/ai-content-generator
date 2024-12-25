@@ -12,15 +12,12 @@ interface props{
 function OutputSection({aiOutput}:props) {
   const editorRef: any = useRef();
 
-  // useEffect(()=>{
-  //   const editorInstance = editorRef.current.getInstance();
-  //   editorInstance.setMarkdown(aiOutput);
-  // },[aiOutput])
 
   useEffect(() => {
     const editorInstance = editorRef.current.getInstance();
     editorInstance.setMarkdown(aiOutput);
-  }, [aiOutput]); // Added aiOutput to the dependency array
+  }, [aiOutput]); 
+  //! Added aiOutput to the dependency array
 
 
   return (
@@ -37,8 +34,8 @@ function OutputSection({aiOutput}:props) {
         initialEditType="wysiwyg"
         height="600px"
         useCommandShortcut={true}
-        onChange={() =>
-          console.log(editorRef.current.getInstance().getMarkdown())}
+        // onChange={() =>
+        //   console.log(aiOutput)}
       />
     </div>
   );

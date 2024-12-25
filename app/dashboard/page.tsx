@@ -5,12 +5,12 @@ import TemplateListSection from './_components/TemplateListSection'
 
 function Dashboard() {
 
-  const [userSearchInput,setUserSearchInput] = useState<string>();
+  const [userSearchInput, setUserSearchInput] = useState<string>("");
 
   return (
     <div>
       {/* Search Section */}
-      <SearchSection onSearchInput={(value:string)=>setUserSearchInput(value)} />
+      <SearchSection onSearchInput={(value: string) => setUserSearchInput(value)} />
 
       {/* Template list section */}
       <TemplateListSection userSearchInput={userSearchInput} />
